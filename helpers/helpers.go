@@ -1,9 +1,12 @@
 package helpers
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"go_banking/interfaces"
 	"golang.org/x/crypto/bcrypt"
+	"regexp"
 )
 
 func HandleErr(err error) {
@@ -15,7 +18,6 @@ func HandleErr(err error) {
 func HashAndSalt(pass []byte) string {
 	hashed, err := bcrypt.GenerateFromPassword(pass, bcrypt.MinCost)
 	HandleErr(err)
-
 	return string(hashed)
 }
 
@@ -23,4 +25,28 @@ func ConnectDB() *gorm.DB {
 	db, err := gorm.Open("postgres", "host=127.0.0.1 port=5432 user=postgres dbname=bankapp password=postgres sslmode=disable")
 	HandleErr(err)
 	return db
+}
+
+func Validation(values []interfaces.Validation) bool {
+	username := regexp.MustCompile(`^([A-Za-z0-9]{5,})+$`)
+	email := regexp.MustCompile(`^[A-Za-z0-9]+[@]+[A-Za-z0-9]+[.]+[A-Za-z0-9]+$`)
+	fmt.Println("values*****", values)
+
+	for i:= 0; i < len(values); i++ {
+		switch values[i].Valid {
+		case "username":
+			if !username.MatchString(values[i].Value) {
+				return false
+			}
+		case "email":
+			if !email.MatchString(values[i].Value) {
+				return false
+			}
+		case "password":
+			if len(values[i].Value) < 5 {
+				return false
+			}
+		}
+	}
+	return true
 }
