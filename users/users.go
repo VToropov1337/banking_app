@@ -36,7 +36,8 @@ func prepareResponse(user *interfaces.User, accounts []interfaces.ResponseAccoun
 	var response = map[string]interface{}{"message": "all is fine"}
 	response["jwt"] = token
 	//responseUser.ID = 42
-	response["data"] = responseUser
+	//response["data"] = responseUser
+	response["data"] = *responseUser
 	fmt.Println("users.response --->", response["data"])
 	return response
 }
@@ -59,7 +60,7 @@ func Login(username string, pass string) map[string]interface{} {
 		fmt.Println("users.user======>", user)
 		// проверяем пароль
 		passError := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass))
-		if passError == bcrypt.ErrMismatchedHashAndPassword && passError != nil {
+		if passError != nil {
 			return map[string]interface{}{"Message": "Wrong password"}
 		}
 
@@ -108,9 +109,7 @@ func Register(username string, email string, pass string) map[string]interface{}
 
 		return response
 
-
 	} else {
 		return map[string]interface{}{"message":"not valid values"}
 	}
-
 }
