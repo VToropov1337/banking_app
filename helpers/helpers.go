@@ -17,6 +17,7 @@ import (
 
 func HandleErr(err error) {
 	if err != nil {
+		fmt.Println("CALL PANIC")
 		panic(err.Error())
 	}
 }
@@ -38,7 +39,7 @@ func Validation(values []interfaces.Validation) bool {
 	email := regexp.MustCompile(`^[A-Za-z0-9]+[@]+[A-Za-z0-9]+[.]+[A-Za-z0-9]+$`)
 	fmt.Println("values*****", values)
 
-	for i:= 0; i < len(values); i++ {
+	for i := 0; i < len(values); i++ {
 		switch values[i].Valid {
 		case "username":
 			if !username.MatchString(values[i].Value) {
@@ -68,11 +69,12 @@ func PanicHandler(next http.Handler) http.Handler {
 				json.NewEncoder(w).Encode(resp)
 			}
 		}()
-		next.ServeHTTP(w,r)
+		next.ServeHTTP(w, r)
 	})
 }
 
 func ValidateToken(id string, jwtToken string) bool {
+	fmt.Println("+_+_+_+_+", id)
 	cleanJwt := strings.Replace(jwtToken, "Bearer ", "", -1)
 	tokenData := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(cleanJwt, tokenData, func(token *jwt.Token) (interface{}, error) {
@@ -85,6 +87,5 @@ func ValidateToken(id string, jwtToken string) bool {
 	} else {
 		return false
 	}
-
 
 }
