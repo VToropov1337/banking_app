@@ -34,7 +34,6 @@ func getAccount(id uint) *interfaces.Account {
 }
 
 func Transaction(userId uint, from uint, to uint, amount int, jwt string) map[string]interface{} {
-	fmt.Println("useraccounts.transaction ===>", userId)
 	userIdstring := fmt.Sprint(userId)
 	isValid := helpers.ValidateToken(userIdstring, jwt)
 

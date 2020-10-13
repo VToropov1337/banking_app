@@ -74,7 +74,6 @@ func PanicHandler(next http.Handler) http.Handler {
 }
 
 func ValidateToken(id string, jwtToken string) bool {
-	fmt.Println("+_+_+_+_+", id)
 	cleanJwt := strings.Replace(jwtToken, "Bearer ", "", -1)
 	tokenData := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(cleanJwt, tokenData, func(token *jwt.Token) (interface{}, error) {
